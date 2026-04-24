@@ -1,0 +1,35 @@
+/* style/App.css */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0a0a0f;
+  color: #f0f0f5;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Con sidebar expandido */
+.app-layout--sidebar .app-content {
+  margin-left: 230px;
+  transition: margin-left 0.25s ease;
+}
+
+/* Con sidebar colapsado */
+.app-layout--collapsed .app-content {
+  margin-left: 64px;
+  transition: margin-left 0.25s ease;
+}
+
+.app-content {
+  flex: 1;
+  min-height: 100vh;
+  transition: margin-left 0.25s ease;
+}

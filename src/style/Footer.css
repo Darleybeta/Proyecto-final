@@ -1,0 +1,70 @@
+/* ── Footer Centrado y Refinado ── */
+.footer {
+  width: 100%;
+  background-color: #0F172A; 
+  padding: 40px 24px; /* Un poco más de aire arriba y abajo para que luzca el centrado */
+  color: #94A3B8;
+  font-family: 'Inter', sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  
+  /* Alineación central total */
+  display: flex;
+  flex-direction: column; /* Apilamos los elementos */
+  align-items: center;    /* Centra horizontalmente */
+  justify-content: center;
+  gap: 24px;              /* Espacio entre los bloques de info, redes y copyright */
+}
+
+.footer-info {
+  display: flex;
+  gap: 30px; /* Espacio horizontal entre ubicación y teléfono */
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-info p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.footer-info p svg {
+  color: #0D9488;
+  font-size: 1.2rem;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.footer-socials a {
+  color: #94A3B8;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+}
+
+.footer-socials a:hover {
+  color: #0D9488;
+  transform: translateY(-3px);
+}
+
+.footer-text {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.5;
+  text-align: center;
+  width: 100%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .footer-info {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
