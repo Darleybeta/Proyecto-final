@@ -22,54 +22,39 @@ export default function RegistroPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setCargando(true);
-    setError("");
-    setExito("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setCargando(true);
+  setError("");
+  setExito("");
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/api/negocios/solicitudes/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nombre_negocio: form.nombreNegocio,
-          nombre_dueño: form.nombre,
-          telefono: form.telefono,
-          correo: form.correo,
-          ciudad: form.ciudad,
-          nit_cedula: form.nit_cedula,
-          tipo_negocio: form.tipo_negocio,
-          estado: "pendiente"
-        }),
-      });
+  try {
+    const data = await crearSolicitud({
+      nombre_negocio: form.nombreNegocio,
+      nombre_dueño:   form.nombre,
+      telefono:       form.telefono,
+      correo:         form.correo,
+      ciudad:         form.ciudad,
+      nit_cedula:     form.nit_cedula,
+      tipo_negocio:   form.tipo_negocio,
+      estado:         "pendiente"
+    });
 
-      const data = await crearSolicitud({
-    nombre_negocio: form.nombreNegocio,
-    nombre_dueño: form.nombre,
-    telefono: form.telefono,
-    correo: form.correo,
-    ciudad: form.ciudad,
-    nit_cedula: form.nit_cedula,
-    tipo_negocio: form.tipo_negocio,
-    estado: "pendiente"
-});
-
-if (data.id) {
-    setExito("¡Solicitud enviada! Pronto nos pondremos en contacto contigo.");
-    setForm({
+    if (data.id) {
+      setExito("¡Solicitud enviada! Pronto nos pondremos en contacto contigo.");
+      setForm({
         nombreNegocio: "", nombre: "", telefono: "",
         correo: "", ciudad: "", nit_cedula: "", tipo_negocio: ""
-    });
-} else {
-    setError(data.error || "Error al enviar la solicitud");
-}
-    } catch (err) {
-      setError("No se pudo conectar con el servidor");
+      });
+    } else {
+      setError(data.error || "Error al enviar la solicitud");
     }
+  } catch (err) {
+    setError("No se pudo conectar con el servidor");
+  }
 
-    setCargando(false);
-  };
+  setCargando(false);
+};
 
   return (
     <div className="page-container">
