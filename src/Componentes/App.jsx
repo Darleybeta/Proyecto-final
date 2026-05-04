@@ -8,6 +8,8 @@ import AdminUsuariosPage from '../Paginas/AdminUsuarioPage';
 import AdminDocumentosPage from '../Paginas/AdminDocuentosPage';
 import Recuperarcontra from '../Paginas/Pagerecuperarcontra';
 import DevPanelPage from '../Paginas/DevpanelPage';
+import ContabilidadPage from '../Paginas/ContabilidadPage';
+import ReportesPage from '../Paginas/ReportesPage';
 
 const RutaProtegida = ({ element }) => {
   const token = localStorage.getItem("token");
@@ -32,6 +34,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        
         <Route path="/"                element={<InicioPage />} />
         <Route path="/Registro"        element={<RegistroPage />} />
         <Route path="/Inicio"          element={<InicioSesionPage onLogin={handleLogin} />} />
@@ -40,6 +43,9 @@ const App = () => {
         <Route path="/AdminDocumentos" element={<RutaProtegida element={<AdminDocumentosPage usuarioActual={usuarioActual} />} />} />
         <Route path="/Recuperar"       element={<Recuperarcontra />} />
         <Route path="/dev"             element={<RutaProtegida element={<DevPanelPage />} />} />
+        <Route path="/Contabilidad" element={<RutaProtegida element={<ContabilidadPage usuarioActual={usuarioActual} />} />} />
+        <Route path="/Reportes" element={<RutaProtegida element={<ReportesPage usuarioActual={usuarioActual} />} />} />
+
       </Routes>
     </BrowserRouter>
   );

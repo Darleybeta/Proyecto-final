@@ -56,6 +56,7 @@ export default function AdminUsuarios({
   onFormNominaChange,
   onGuardarNomina,
   onEliminarNomina,
+  onPagarNomina,
 
   // ── Gastos ──
   gastos = [],
@@ -218,10 +219,16 @@ export default function AdminUsuarios({
                         <td className="au__nomina-deduccion">-${Number(n.deducciones || 0).toLocaleString("es-CO")}</td>
                         <td><strong className="au__nomina-total">${Number(n.totalPagar).toLocaleString("es-CO")}</strong></td>
                         <td className="au__fecha">{n.fechaPago}</td>
-                        <td><div className="au__actions">
-                          <button className="au__act au__act--edit" onClick={() => onAbrirEditarNomina(n)}>✏️</button>
-                          <button className="au__act au__act--del" onClick={() => onEliminarNomina(n.id)}>🗑️</button>
-                        </div></td>
+                      <td><div className="au__actions">
+                      {n.estado !== "pagado" && (
+                        <button className="au__act au__act--pagar" onClick={() => onPagarNomina(n.id)} title="Pagar nómina">💳</button>
+                      )}
+                      {n.estado === "pagado" && (
+                        <span className="au__badge au__badge--pagado">✓ Pagado</span>
+                      )}
+                      <button className="au__act au__act--edit" onClick={() => onAbrirEditarNomina(n)}>✏️</button>
+                      <button className="au__act au__act--del" onClick={() => onEliminarNomina(n.id)}>🗑️</button>
+                    </div></td>
                       </tr>
                     ))}
                   </tbody>

@@ -2,6 +2,9 @@
 import { useState, useMemo, useEffect } from "react";
 import AdminUsuarios from "../Componentes/AdminUsuarios";
 import Footer from "../Componentes/Footer";
+import {
+  getNomina, crearNomina, actualizarNomina, eliminarNomina, pagarNomina
+} from "../api/config.js";
 
 const FORM_USUARIO  = { nombre: "", correo: "", rol: "", contrasena: "", confirmarContrasena: "", activo: "true" };
 const FORM_NOMINA   = { nombre: "", cargo: "", salarioBase: "", horasExtras: "", recargos: "", deducciones: "", fechaPago: "" };
@@ -79,7 +82,36 @@ export default function AdminUsuariosPage({ usuarioActual }) {
   const [arriendoEditando, setArriendoEditando] = useState(null);
   const [formArriendo, setFormArriendo]         = useState(FORM_ARRIENDO);
   const [errorFormArriendo, setErrorFormArriendo] = useState("");
+  useEffect(() => {
+    if (!negocioId) return;
+    cargarNomina();
+  }, [negocioId]);
 
+  const cargarNomina = async () => {
+  try {
+    const data = await getNomina(negocioId);
+    if (Array.isArray(data)) {
+      const normalizada = data.map((n) => ({
+        id:          n.id,
+        nombre:      n.empleado_nombre,
+        cargo:       n.cargo || "",
+        salarioBase: String(n.salario || ""),
+        horasExtras: String(n.horas_extras || "0"),
+        recargos:    String(n.recargos || "0"),
+        deducciones: String(n.deducciones || "0"),
+        fechaPago:   n.fecha_pago
+          ? new Date(n.fecha_pago).toISOString().split("T")[0]
+          : "",
+        mes:         n.mes || "",
+        estado:      n.estado || "pendiente",
+        totalPagar:  Number(n.salario || 0) + Number(n.horas_extras || 0) + Number(n.recargos || 0) - Number(n.deducciones || 0),
+      }));
+      setNominas(normalizada);
+    }
+  } catch {
+    console.error("Error al cargar nómina");
+  }
+};
   // ── Cargar usuarios del backend ───────────────────────
   useEffect(() => {
     if (!negocioId) return;
@@ -168,37 +200,40 @@ export default function AdminUsuariosPage({ usuarioActual }) {
       if (contrasena !== confirmarContrasena) return setErrorFormUsuario("Las contraseñas no coinciden.");
     }
 
-    try {
-      if (usuarioEditando) {
-        // Editar — solo actualizamos nombre, correo, rol
-        await fetch(`${API}/auth/usuarios/${usuarioEditando.id}/`, {
-          method: "PATCH",
-          headers: getHeaders(),
-          body: JSON.stringify({
-            nombre: nombre.trim(),
-            correo: correo.trim().toLowerCase(),
-            rol:    rolFrontendABackend(rol),
-          })
-        });
-      } else {
-        // Crear nuevo usuario
-        await fetch(`${API}/auth/registro/`, {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify({
-            nombre:     nombre.trim(),
-            correo:     correo.trim().toLowerCase(),
-            password:   contrasena,
-            rol:        rolFrontendABackend(rol),
-            negocio_id: negocioId,
-          })
-        });
-      }
-      await cargarUsuarios();
-      handleCerrarModal();
-    } catch {
-      setErrorFormUsuario("Error de conexión. Intenta de nuevo.");
+try {
+  if (usuarioEditando) {
+    await fetch(`${API}/auth/usuarios/${usuarioEditando.id}/`, {
+      method: "PATCH",
+      headers: getHeaders(),
+      body: JSON.stringify({
+        nombre: nombre.trim(),
+        correo: correo.trim().toLowerCase(),
+        rol:    rolFrontendABackend(rol),
+      })
+    });
+  } else {
+    const res = await fetch(`${API}/auth/registro/`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({
+        nombre:     nombre.trim(),
+        correo:     correo.trim().toLowerCase(),
+        password:   contrasena,
+        rol:        rolFrontendABackend(rol),
+        negocio_id: negocioId,
+      })
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      return setErrorFormUsuario(data.error || "Error al crear el usuario.");
     }
+  }
+  await cargarUsuarios();
+  handleCerrarModal();
+} catch {
+  setErrorFormUsuario("Error de conexión. Intenta de nuevo.");
+}
   };
 
   const handleAbrirConfirmarEliminar  = (u) => { setUsuarioAEliminar(u); setModalEliminar(true); };
@@ -221,17 +256,70 @@ export default function AdminUsuariosPage({ usuarioActual }) {
   const handleAbrirModalNomina  = () => { setNominaEditando(null); setFormNomina(FORM_NOMINA); setErrorFormNomina(""); setModalNomina(true); };
   const handleAbrirEditarNomina = (n) => { setNominaEditando(n); setFormNomina({ ...n }); setErrorFormNomina(""); setModalNomina(true); };
   const handleCerrarModalNomina = () => { setModalNomina(false); setNominaEditando(null); setFormNomina(FORM_NOMINA); setErrorFormNomina(""); };
-  const handleGuardarNomina = () => {
+  const handleGuardarNomina = async () => {
     const { nombre, cargo, salarioBase, fechaPago } = formNomina;
     if (!nombre.trim())  return setErrorFormNomina("El nombre es obligatorio.");
     if (!cargo.trim())   return setErrorFormNomina("El cargo es obligatorio.");
     if (!salarioBase)    return setErrorFormNomina("Ingresa el salario base.");
     if (!fechaPago)      return setErrorFormNomina("Ingresa la fecha de pago.");
-    const nuevo = { id: Date.now(), ...formNomina, totalPagar: totalNominaCalculado };
-    setNominas((prev) => nominaEditando ? prev.map((n) => n.id === nominaEditando.id ? nuevo : n) : [...prev, nuevo]);
-    handleCerrarModalNomina();
-  };
-  const handleEliminarNomina = (id) => { if (!window.confirm("¿Eliminar?")) return; setNominas((prev) => prev.filter((n) => n.id !== id)); };
+
+    const payload = {
+  empleado_nombre: nombre.trim(),
+  cargo:           cargo.trim(),
+  salario:         Number(formNomina.salarioBase || 0),
+  horas_extras:    Number(formNomina.horasExtras || 0),
+  recargos:        Number(formNomina.recargos || 0),
+  deducciones:     Number(formNomina.deducciones || 0),
+  mes:             formNomina.mes || new Date().toLocaleString("es-CO", { month: "long" }),
+  fecha_pago:      fechaPago,
+  estado:          "pendiente",
+  negocio:         negocioId,
+};
+
+  try {
+    if (nominaEditando) {
+      const data = await actualizarNomina(nominaEditando.id, payload);
+      if (data.id) {
+        await cargarNomina();
+        handleCerrarModalNomina();
+      } else {
+        setErrorFormNomina("Error al actualizar. Intenta de nuevo.");
+      }
+    } else {
+      const data = await crearNomina(payload);
+      if (data.id) {
+        await cargarNomina();
+        handleCerrarModalNomina();
+      } else {
+        setErrorFormNomina("Error al crear. Intenta de nuevo.");
+      }
+    }
+  } catch {
+    setErrorFormNomina("Error de conexión con el servidor.");
+  }
+};
+ const handleEliminarNomina = async (id) => {
+  if (!window.confirm("¿Eliminar este empleado de nómina?")) return;
+  try {
+    const ok = await eliminarNomina(id);
+    if (ok) await cargarNomina();
+  } catch {
+    console.error("Error al eliminar nómina");
+  }
+};
+const handlePagarNomina = async (id) => {
+  if (!window.confirm("¿Confirmar pago de esta nómina? Se registrará automáticamente como gasto en contabilidad.")) return;
+  try {
+    const data = await pagarNomina(id);
+    if (data.mensaje) {
+      await cargarNomina();
+    } else {
+      alert("Error al procesar el pago.");
+    }
+  } catch {
+    console.error("Error al pagar nómina");
+  }
+};
 
   // ── Handlers: Gastos ──────────────────────────────────
   const handleAbrirModalGasto  = () => { setGastoEditando(null); setFormGasto({ ...FORM_GASTO, fecha: new Date().toISOString().split("T")[0] }); setErrorFormGasto(""); setModalGasto(true); };
@@ -349,6 +437,7 @@ export default function AdminUsuariosPage({ usuarioActual }) {
         onFormNominaChange={makeFormChange(setFormNomina, setErrorFormNomina)}
         onGuardarNomina={handleGuardarNomina}
         onEliminarNomina={handleEliminarNomina}
+        onPagarNomina={handlePagarNomina}
         gastos={gastos}
         modalGastoAbierto={modalGastoAbierto}
         gastoEditando={gastoEditando}

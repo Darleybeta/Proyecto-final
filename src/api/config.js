@@ -139,3 +139,44 @@ export const eliminarProducto = async (id) => {
     });
     return res.ok;
 };
+// NÓMINA
+export const getNomina = async (negocio_id) => {
+    const res = await fetch(`${API_URL}/nomina/?negocio_id=${negocio_id}`, {
+        headers: headers()
+    });
+    return res.json();
+};
+
+export const crearNomina = async (datos) => {
+    const res = await fetch(`${API_URL}/nomina/`, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify(datos)
+    });
+    return res.json();
+};
+
+export const actualizarNomina = async (id, datos) => {
+    const res = await fetch(`${API_URL}/nomina/${id}/`, {
+        method: 'PATCH',
+        headers: headers(),
+        body: JSON.stringify(datos)
+    });
+    return res.json();
+};
+
+export const eliminarNomina = async (id) => {
+    const res = await fetch(`${API_URL}/nomina/${id}/`, {
+        method: 'DELETE',
+        headers: headers()
+    });
+    return res.ok;
+};
+
+export const pagarNomina = async (id) => {
+    const res = await fetch(`${API_URL}/nomina/${id}/pagar/`, {
+        method: 'POST',
+        headers: headers()
+    });
+    return res.json();
+};

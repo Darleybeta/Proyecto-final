@@ -103,6 +103,7 @@ export default function InventarioPage({ usuarioActual }) {
   // ── Handlers: navegación admin ────────────────────────
   const handleIrUsuarios   = () => navigate("/AdminUsuario");
   const handleIrDocumentos = () => navigate("/AdminDocumentos");
+  const handleIrContabilidad = () => navigate("/Contabilidad");
 
   // ── Handlers: modal producto ──────────────────────────
   const handleAbrirModalAgregar = () => {
@@ -309,6 +310,7 @@ export default function InventarioPage({ usuarioActual }) {
         // Handlers navegación admin
         onIrUsuarios={handleIrUsuarios}
         onIrDocumentos={handleIrDocumentos}
+        onIrContabilidad={handleIrContabilidad}
         // Handlers producto
         onAbrirModalAgregar={handleAbrirModalAgregar}
         onAbrirModalEditar={handleAbrirModalEditar}

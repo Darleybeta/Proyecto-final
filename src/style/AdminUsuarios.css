@@ -404,3 +404,17 @@
 }
 .au__file-label:hover { border-color: #6c63ff; color: #f0f0f5; }
 .au__file-input { display: none; }
+.au__act--pagar:hover {
+  border-color: #3de09c;
+  background: #3de09c22;
+}
+
+.au__badge--pagado {
+  background: #3de09c22;
+  color: #3de09c;
+  border: 1px solid #3de09c33;
+  padding: 0.22rem 0.65rem;
+  border-radius: 99px;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
