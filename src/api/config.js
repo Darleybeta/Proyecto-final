@@ -180,3 +180,36 @@ export const pagarNomina = async (id) => {
     });
     return res.json();
 };
+// FACTURAS
+export const getFacturas = async (negocio_id) => {
+    const res = await fetch(`${API_URL}/contabilidad/facturas/?negocio_id=${negocio_id}`, {
+        headers: headers()
+    });
+    return res.json();
+};
+
+export const crearFactura = async (datos) => {
+    const res = await fetch(`${API_URL}/contabilidad/facturas/`, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify(datos)
+    });
+    return res.json();
+};
+
+export const actualizarFactura = async (id, datos) => {
+    const res = await fetch(`${API_URL}/contabilidad/facturas/${id}/`, {
+        method: 'PATCH',
+        headers: headers(),
+        body: JSON.stringify(datos)
+    });
+    return res.json();
+};
+
+export const eliminarFactura = async (id) => {
+    const res = await fetch(`${API_URL}/contabilidad/facturas/${id}/`, {
+        method: 'DELETE',
+        headers: headers()
+    });
+    return res.ok;
+};

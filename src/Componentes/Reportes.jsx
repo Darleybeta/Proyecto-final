@@ -36,17 +36,35 @@ export default function Reportes({
   totalProductos,
   datosMensuales,
   ultimasTransacciones,
+  onActualizar,
+  filtroMes,
+  onFiltroMes,
 }) {
   return (
     <main className="rep">
 
       {/* ── HEADER ── */}
       <header className="rep__header">
-        <div>
-          <h1 className="rep__titulo">Reportes y <span>Estadísticas</span></h1>
-          <p className="rep__subtitulo">Visualiza el rendimiento financiero de tu negocio.</p>
-        </div>
-      </header>
+  <div>
+    <h1 className="rep__titulo">Reportes y <span>Estadísticas</span></h1>
+    <p className="rep__subtitulo">Visualiza el rendimiento financiero de tu negocio.</p>
+  </div>
+  <button
+    onClick={onActualizar}
+    style={{
+      background: "var(--rep-accent)",
+      color: "#fff",
+      border: "none",
+      padding: "0.65rem 1.3rem",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: 600,
+      fontSize: "0.9rem"
+    }}
+  >
+    🔄 Actualizar datos
+  </button>
+</header>
 
       {cargando ? (
         <div className="rep__loading">Cargando datos...</div>
@@ -85,6 +103,33 @@ export default function Reportes({
               </div>
             </div>
           </section>
+          {/* ── FILTROS GRÁFICA ── */}
+<div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+  {[
+    { key: "todos",   label: "Todos los meses" },
+    { key: "3meses",  label: "Últimos 3 meses" },
+    { key: "6meses",  label: "Últimos 6 meses" },
+    { key: "anio",    label: "Este año" },
+  ].map((f) => (
+    <button
+      key={f.key}
+      onClick={() => onFiltroMes(f.key)}
+      style={{
+        background: filtroMes === f.key ? "var(--rep-accent)" : "var(--rep-surface)",
+        color: filtroMes === f.key ? "#fff" : "var(--rep-muted)",
+        border: `1px solid ${filtroMes === f.key ? "var(--rep-accent)" : "var(--rep-border)"}`,
+        padding: "0.5rem 1rem",
+        borderRadius: "8px",
+        cursor: "pointer",
+        fontSize: "0.85rem",
+        fontWeight: filtroMes === f.key ? 600 : 400,
+        transition: "all 0.2s"
+      }}
+    >
+      {f.label}
+    </button>
+  ))}
+</div>
 
           {/* ── GRÁFICAS ── */}
           <div className="rep__charts">

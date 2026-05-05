@@ -10,6 +10,7 @@ export default function ReportesPage({ usuarioActual }) {
   const [transacciones, setTransacciones] = useState([]);
   const [totalProductos, setTotalProductos] = useState(0);
   const [cargando, setCargando] = useState(true);
+  const [filtroMes, setFiltroMes] = useState("todos");
 
   useEffect(() => {
     if (!negocioId) return;
@@ -61,7 +62,7 @@ export default function ReportesPage({ usuarioActual }) {
   const datosMensuales = useMemo(() => {
     const meses = {};
     const nombresMes = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-
+    
     transacciones.forEach((t) => {
       if (!t.fechaRaw) return;
       const d = new Date(t.fechaRaw);
@@ -76,6 +77,16 @@ export default function ReportesPage({ usuarioActual }) {
       balance: m.ingresos - m.gastos,
     }));
   }, [transacciones]);
+  const datosMensualesFiltrados = useMemo(() => {
+  if (filtroMes === "todos") return datosMensuales;
+  if (filtroMes === "3meses") return datosMensuales.slice(-3);
+  if (filtroMes === "6meses") return datosMensuales.slice(-6);
+  if (filtroMes === "anio") {
+    const anioActual = new Date().getFullYear();
+    return datosMensuales.filter((d) => d.mes.includes(String(anioActual)));
+  }
+  return datosMensuales;
+}, [datosMensuales, filtroMes]);
 
   // ── Últimas 10 transacciones ──
   const ultimasTransacciones = useMemo(() =>
@@ -84,15 +95,18 @@ export default function ReportesPage({ usuarioActual }) {
 
   return (
     <div>
-      <Reportes
-        cargando={cargando}
-        totalIngresos={totalIngresos}
-        totalGastos={totalGastos}
-        balance={balance}
-        totalProductos={totalProductos}
-        datosMensuales={datosMensuales}
-        ultimasTransacciones={ultimasTransacciones}
-      />
+        <Reportes
+      cargando={cargando}
+      totalIngresos={totalIngresos}
+      totalGastos={totalGastos}
+      balance={balance}
+      totalProductos={totalProductos}
+      datosMensuales={datosMensualesFiltrados}
+      ultimasTransacciones={ultimasTransacciones}
+      onActualizar={cargarDatos}
+      filtroMes={filtroMes}
+      onFiltroMes={setFiltroMes}
+    />
       <Footer />
     </div>
   );
