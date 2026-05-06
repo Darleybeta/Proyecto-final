@@ -11,6 +11,8 @@ import DevPanelPage from '../Paginas/DevpanelPage';
 import ContabilidadPage from '../Paginas/ContabilidadPage';
 import ReportesPage from '../Paginas/ReportesPage';
 import FacturasPage from '../Paginas/FacturasPage';
+import ChatIAPage from '../Paginas/ChatIAPage';
+import Layout from '../Componentes/Layout';
 
 const RutaProtegida = ({ element }) => {
   const token = localStorage.getItem("token");
@@ -39,14 +41,46 @@ const App = () => {
         <Route path="/"                element={<InicioPage />} />
         <Route path="/Registro"        element={<RegistroPage />} />
         <Route path="/Inicio"          element={<InicioSesionPage onLogin={handleLogin} />} />
-        <Route path="/Inventario"      element={<RutaProtegida element={<InventarioPage usuarioActual={usuarioActual} />} />} />
-        <Route path="/AdminUsuario"    element={<RutaProtegida element={<AdminUsuariosPage usuarioActual={usuarioActual} />} />} />
+            <Route path="/Inventario" element={
+        <RutaProtegida element={
+          <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+            <InventarioPage usuarioActual={usuarioActual} />
+          </Layout>
+        } />
+      } />
+              <Route path="/AdminUsuario" element={
+        <RutaProtegida element={
+          <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+            <AdminUsuariosPage usuarioActual={usuarioActual} />
+          </Layout>
+        } />
+      } />
         <Route path="/AdminDocumentos" element={<RutaProtegida element={<AdminDocumentosPage usuarioActual={usuarioActual} />} />} />
         <Route path="/Recuperar"       element={<Recuperarcontra />} />
+
+                <Route path="/Contabilidad" element={
+          <RutaProtegida element={
+            <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+              <ContabilidadPage usuarioActual={usuarioActual} />
+            </Layout>
+          } />
+        } />
+                  <Route path="/Reportes" element={
+            <RutaProtegida element={
+              <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+                <ReportesPage usuarioActual={usuarioActual} />
+              </Layout>
+            } />
+          } />
+              <Route path="/Facturas" element={
+          <RutaProtegida element={
+            <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+              <FacturasPage usuarioActual={usuarioActual} />
+            </Layout>
+          } />
+        } />
+        <Route path="/Chat"element={<ChatIAPage usuarioActual={usuarioActual} />} />
         <Route path="/dev"             element={<RutaProtegida element={<DevPanelPage />} />} />
-        <Route path="/Contabilidad" element={<RutaProtegida element={<ContabilidadPage usuarioActual={usuarioActual} />} />} />
-        <Route path="/Reportes" element={<RutaProtegida element={<ReportesPage usuarioActual={usuarioActual} />} />} />
-        <Route path="/Facturas" element={<RutaProtegida element={<FacturasPage usuarioActual={usuarioActual} />} />} />
       </Routes>
     </BrowserRouter>
   );
