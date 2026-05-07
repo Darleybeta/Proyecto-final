@@ -44,9 +44,9 @@ export default function ChatIAPage({ usuarioActual }) {
 
   // Redirigir si no es administrador
   useEffect(() => {
-    if (usuarioActual && usuarioActual.rol !== "Administrador") {
-      navigate("/Inventario");
-    }
+if (usuarioActual && usuarioActual.rol !== "Administrador" && usuarioActual.rol !== "admin") {
+  navigate("/Inventario");
+}
   }, [usuarioActual, navigate]);
 
   // ── Estado ──────────────────────────────────────────
@@ -85,21 +85,20 @@ export default function ChatIAPage({ usuarioActual }) {
         content: m.texto,
       }));
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("http://127.0.0.1:8000/api/ia/analizar/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: historial,
+          negocio_id: usuarioActual?.negocio_id,
+          pregunta: texto,
         }),
       });
 
       const data = await response.json();
-      const respuestaTexto =
-        data?.content?.find((b) => b.type === "text")?.text ||
-        "Lo siento, no pude procesar tu consulta. Intenta de nuevo.";
+      const respuestaTexto = data?.respuesta || "Lo siento, no pude procesar tu consulta.";
 
       setMensajes((prev) => [
         ...prev,

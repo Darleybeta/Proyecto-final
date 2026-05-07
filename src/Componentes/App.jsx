@@ -79,7 +79,13 @@ const App = () => {
             </Layout>
           } />
         } />
-        <Route path="/Chat"element={<ChatIAPage usuarioActual={usuarioActual} />} />
+       <Route path="/Chat" element={
+          <RutaProtegida element={
+            <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+              <ChatIAPage usuarioActual={usuarioActual} />
+            </Layout>
+          } />
+        } />
         <Route path="/dev"             element={<RutaProtegida element={<DevPanelPage />} />} />
       </Routes>
     </BrowserRouter>

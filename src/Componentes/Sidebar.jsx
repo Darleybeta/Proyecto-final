@@ -9,6 +9,7 @@ const LINKS = [
   { to: "/Contabilidad",  icon: "📒", label: "Contabilidad" },
   { to: "/Facturas",      icon: "🧾", label: "Facturas" },
   { to: "/Reportes",      icon: "📊", label: "Reportes" },
+  { to: "/Chat",       icon: "🤖", label: "Asistente IA" },
 ];
 
 export default function Sidebar({ usuarioActual, onLogout }) {
