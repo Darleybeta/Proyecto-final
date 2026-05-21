@@ -19,6 +19,35 @@
   --dev-radius-sm: 8px;
   --dev-radius-xs: 6px;
 }
+/* Pega esto en tu DevPanel.css */
+
+/* Contenedor de botones en el header */
+.dev__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Botón Cerrar Sesión */
+.dev__btn-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  border: 1.5px solid #f87171;
+  background: transparent;
+  color: #f87171;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.dev__btn-logout:hover {
+  background: #f87171;
+  color: #fff;
+}
 
 .dev {
   min-height: 100vh;

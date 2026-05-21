@@ -72,12 +72,7 @@ export default function Inventario({
 
           {esAdmin && (
             <>
-              <button className="inv__btn-secondary" onClick={onIrUsuarios}>
-                👥 Usuarios
-              </button>
-              <button className="inv__btn-secondary" onClick={onIrDocumentos}>
-                🗂️ Documentos
-              </button>
+
               <button className="inv__btn-primary" onClick={onAbrirModalAgregar}>
                 ＋ Nuevo Producto
               </button>

@@ -3,7 +3,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import "../style/Registro.css";
+import "../style/Finicio.css";
 
 export default function Finicio({ handleSubmit, form, handleChange, mostrarSelectRol = false }) {
   return (

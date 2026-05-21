@@ -7,12 +7,14 @@ import InventarioPage from '../Paginas/InventarioPage';
 import AdminUsuariosPage from '../Paginas/AdminUsuarioPage';
 import AdminDocumentosPage from '../Paginas/AdminDocuentosPage';
 import Recuperarcontra from '../Paginas/Pagerecuperarcontra';
+import NuevaContrasenaPage from '../Paginas/NuevaContrasenaPage';  
 import DevPanelPage from '../Paginas/DevpanelPage';
 import ContabilidadPage from '../Paginas/ContabilidadPage';
 import ReportesPage from '../Paginas/ReportesPage';
 import FacturasPage from '../Paginas/FacturasPage';
 import ChatIAPage from '../Paginas/ChatIAPage';
 import Layout from '../Componentes/Layout';
+import CambiarContrasenaPage from '../Paginas/CambiarContrasenaPage';  
 
 const RutaProtegida = ({ element }) => {
   const token = localStorage.getItem("token");
@@ -41,6 +43,10 @@ const App = () => {
         <Route path="/"                element={<InicioPage />} />
         <Route path="/Registro"        element={<RegistroPage />} />
         <Route path="/Inicio"          element={<InicioSesionPage onLogin={handleLogin} />} />
+        <Route path="/Recuperar"       element={<Recuperarcontra />} />
+        <Route path="/RecuperarContrasena"  element={<NuevaContrasenaPage />} /> 
+        <Route path="/CambiarContrasena" element={<CambiarContrasenaPage />} />   
+
             <Route path="/Inventario" element={
         <RutaProtegida element={
           <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
@@ -55,8 +61,7 @@ const App = () => {
           </Layout>
         } />
       } />
-        <Route path="/AdminDocumentos" element={<RutaProtegida element={<AdminDocumentosPage usuarioActual={usuarioActual} />} />} />
-        <Route path="/Recuperar"       element={<Recuperarcontra />} />
+       
 
                 <Route path="/Contabilidad" element={
           <RutaProtegida element={
@@ -83,6 +88,13 @@ const App = () => {
           <RutaProtegida element={
             <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
               <ChatIAPage usuarioActual={usuarioActual} />
+            </Layout>
+          } />
+        } />
+          <Route path="/AdminDocumentos" element={
+          <RutaProtegida element={
+            <Layout usuarioActual={usuarioActual} onLogout={handleLogout}>
+              <AdminDocumentosPage usuarioActual={usuarioActual} />
             </Layout>
           } />
         } />

@@ -4,6 +4,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
 
+:root {
+  --primary:   #1a3a52;
+  --primary-h: #122b3d;
+  --border:    #d6dce3;
+  --bg:        #eef2f6;
+  --surface:   #ffffff;
+  --text:      #1f2d3a;
+  --label:     #5b6b79;
+  --shadow:    0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
 /* ================= RESET ================= */
 
 * {
@@ -12,41 +23,43 @@
   padding: 0;
 }
 
-/* ================= TARJETA ================= */
-/* ================= CONTENEDOR GENERAL ================= */
-
-.reg-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 60px;
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
   
 }
 
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px;
+}
+
 /* ================= TARJETA ================= */
 
-.reg-container {
+.registro-container {
   width: 100%;
-  max-width: 820px;
-  background: #ffffff;
-  padding: 40px 48px;
+  max-width: 520px;
+  background: var(--surface);
+  padding: 50px 48px;
   border-radius: 12px;
-  border: 1px solid #d6dce3;
-
+  border: 1px solid var(--border);
   box-shadow:
-    0 6px 18px rgba(16, 24, 40, 0.06),
+    var(--shadow),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 0 18px -2px #1a3a52,
-    0 0 40px -8px color-mix(in srgb, #1a3a52 40%, transparent);
-
+    0 0 18px -2px var(--primary),
+    0 0 40px -8px color-mix(in srgb, var(--primary) 40%, transparent);
   position: relative;
-  animation: regFadeUp .35s ease-out both;
+  animation: fadeUp .35s ease-out both;
+  margin-bottom: 40px;
+  margin-top: 6em;
   overflow: hidden;
-
-  margin: 0 auto;
 }
-.reg-container::before {
+
+.registro-container::before {
   content: "";
   position: absolute;
   top: 0;
@@ -56,15 +69,15 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    #1a3a52 30%,
-    color-mix(in srgb, #1a3a52 80%, white) 50%,
-    #1a3a52 70%,
+    var(--primary) 30%,
+    color-mix(in srgb, var(--primary) 80%, white) 50%,
+    var(--primary) 70%,
     transparent 100%
   );
   filter: blur(0.5px);
 }
 
-.reg-container::after {
+.registro-container::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -72,10 +85,10 @@
   padding: 1px;
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, #1a3a52 60%, transparent),
+    color-mix(in srgb, var(--primary) 60%, transparent),
     transparent 40%,
     transparent 60%,
-    color-mix(in srgb, #1a3a52 30%, transparent)
+    color-mix(in srgb, var(--primary) 30%, transparent)
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -85,14 +98,14 @@
   pointer-events: none;
 }
 
-@keyframes regFadeUp {
+@keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ================= TÍTULO ================= */
 
-.reg-titulo {
+.registro-titulo {
   font-family: 'DM Serif Display', serif;
   font-size: 1.7rem;
   font-weight: 400;
@@ -101,72 +114,65 @@
   margin-bottom: 36px;
 }
 
-/* ================= FORMULARIO - GRID 2 COLUMNAS ================= */
+/* ================= FORMULARIO ================= */
 
-.reg-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px 28px;
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
 /* ================= GRUPO DE CAMPO ================= */
 
-.reg-campo {
+.campo {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-/* Campos y elementos que ocupan las dos columnas */
-.reg-campo--full,
-.reg-btn,
-.reg-footer {
-  grid-column: 1 / -1;
-}
-
 /* ================= LABEL ================= */
 
-.reg-label {
+.registro-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #5b6b79;
+  color: var(--label);
   letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 
 /* ================= INPUT ================= */
 
-.reg-input {
+.registro-input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid #d6dce3;
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 0.92rem;
-  background: #f0faf9;
-  color: #1f2d3a;
+  background: #0f766e;
+  color: var(--text);
   transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
 
-.reg-input::placeholder {
+.registro-input::placeholder {
   color: #a0aab5;
   font-weight: 300;
 }
 
-.reg-input:hover {
+.registro-input:hover {
   border-color: #b8c3cf;
 }
 
-.reg-input:focus {
+.registro-input:focus {
   outline: none;
   background: #ffffff;
-  border-color: #1a3a52;
-  box-shadow: 0 0 0 3px rgba(26, 58, 82, 0.12);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(164, 17, 209, 0.12);
 }
 
 /* ================= BOTÓN ================= */
 
-.reg-btn {
-  margin-top: 6px;
+.registro-btn {
+  margin-top: 10px;
   padding: 14px;
   width: 100%;
   background-color: #0f766e;
@@ -180,52 +186,52 @@
   transition: background-color .2s ease, transform .1s ease;
 }
 
-.reg-btn:hover {
-  background-color: #122b3d;
+.registro-btn:hover {
+  background-color: var(--primary-h);
 }
 
-.reg-btn:active {
+.registro-btn:active {
   transform: scale(0.99);
 }
 
-.reg-btn:disabled {
+.registro-btn:disabled {
   background-color: #0f766e;
   cursor: not-allowed;
-}
-
-/* ================= FOOTER ================= */
-
-.reg-footer {
-  margin-top: 8px;
-  text-align: center;
-  font-size: 14px;
-  color: #5b6b79;
-}
-
-.reg-link {
-  color: #1a3a52;
-  text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.2s;
-}
-
-.reg-link:hover {
-  opacity: 0.75;
-  text-decoration: underline;
 }
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 600px) {
-  .reg-container {
+  .registro-container {
     padding: 40px 28px;
   }
 
-  .reg-titulo {
+  .registro-titulo {
     font-size: 1.5rem;
   }
+}
+.registro-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
 
-  .reg-form {
-    grid-template-columns: 1fr;
-  }
+.registro-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.registro-link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+.registro-forgot {
+  display: block;
+  font-size: 13px;
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 4px;
 }

@@ -10,6 +10,7 @@ const LINKS = [
   { to: "/Facturas",      icon: "🧾", label: "Facturas" },
   { to: "/Reportes",      icon: "📊", label: "Reportes" },
   { to: "/Chat",       icon: "🤖", label: "Asistente IA" },
+  { to: "/AdminDocumentos", icon: "📁", label: "Documentos" },
 ];
 
 export default function Sidebar({ usuarioActual, onLogout }) {

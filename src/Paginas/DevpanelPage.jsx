@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import DevPanel from "../Componentes/Devpanel";
 import Footer from "../Componentes/Footer";
+import { useNavigate } from "react-router-dom";
 
 const FORM_VACIO = {
   nombre: "", nit: "", sector: "", correo: "",
@@ -14,6 +15,7 @@ const getHeaders = () => ({
 });
 
 export default function DevPanelPage() {
+  const navigate = useNavigate();
   const [empresas, setEmpresas]       = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
   const [vistaActiva, setVistaActiva] = useState("empresas");
@@ -27,13 +29,13 @@ export default function DevPanelPage() {
   const [formEmpresa, setFormEmpresa]         = useState(FORM_VACIO);
   const [errorForm, setErrorForm]             = useState("");
 
-useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-        cargarEmpresas();
-        cargarSolicitudes();
+      cargarEmpresas();
+      cargarSolicitudes();
     }
-}, []);
+  }, []);
 
   const cargarEmpresas = async () => {
     const res = await fetch("http://127.0.0.1:8000/api/negocios/", { headers: getHeaders() });
@@ -41,32 +43,32 @@ useEffect(() => {
     setEmpresas(Array.isArray(data) ? data : []);
   };
 
-const cargarSolicitudes = async () => {
-  const res = await fetch("http://127.0.0.1:8000/api/negocios/solicitudes/", { headers: getHeaders() });
-  const data = await res.json();
-  if (Array.isArray(data)) {
-    const transformadas = data
-      .filter((s) => s.estado === "pendiente")  // ← solo pendientes
-      .map((s) => ({
-        id:       s.id,
-        empresa:  s.nombre_negocio,
-        contacto: s.nombre_dueño,
-        correo:   s.correo,
-        telefono: s.telefono,
-        nit:      s.nit_cedula,
-        ciudad:   s.ciudad,
-        tipo:     s.tipo_negocio,
-        estado:   s.estado,
-        fecha:    s.fecha_solicitud
-          ? new Date(s.fecha_solicitud).toLocaleDateString("es-CO")
-          : "Sin fecha",
-        _raw: s,
-      }));
-    setSolicitudes(transformadas);
-  } else {
-    setSolicitudes([]);
-  }
-};
+  const cargarSolicitudes = async () => {
+    const res = await fetch("http://127.0.0.1:8000/api/negocios/solicitudes/", { headers: getHeaders() });
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      const transformadas = data
+        .filter((s) => s.estado === "pendiente")
+        .map((s) => ({
+          id:       s.id,
+          empresa:  s.nombre_negocio,
+          contacto: s.nombre_dueño,
+          correo:   s.correo,
+          telefono: s.telefono,
+          nit:      s.nit_cedula,
+          ciudad:   s.ciudad,
+          tipo:     s.tipo_negocio,
+          estado:   s.estado,
+          fecha:    s.fecha_solicitud
+            ? new Date(s.fecha_solicitud).toLocaleDateString("es-CO")
+            : "Sin fecha",
+          _raw: s,
+        }));
+      setSolicitudes(transformadas);
+    } else {
+      setSolicitudes([]);
+    }
+  };
 
   const empresasFiltradas = useMemo(() => {
     const q = busquedaEmpresa.toLowerCase();
@@ -164,57 +166,68 @@ const cargarSolicitudes = async () => {
     handleCerrarModal();
   };
 
-const handleEliminarEmpresa = async (id) => {
-  if (!window.confirm("¿Eliminar esta empresa y todos sus usuarios?")) return;
+  const handleEliminarEmpresa = async (id) => {
+    if (!window.confirm("¿Eliminar esta empresa y todos sus usuarios?")) return;
 
-  try {
-    // 1. Obtener usuarios del negocio
-    const resUsuarios = await fetch(
-      `http://127.0.0.1:8000/api/auth/usuarios/?negocio_id=${id}`,
-      { headers: getHeaders() }
-    );
-    const usuarios = await resUsuarios.json();
-
-    // 2. Eliminar todos los usuarios en paralelo y esperar que terminen
-    if (Array.isArray(usuarios) && usuarios.length > 0) {
-      await Promise.all(
-        usuarios.map((u) =>
-          fetch(`http://127.0.0.1:8000/api/auth/usuarios/${u.id}/`, {
-            method: "DELETE",
-            headers: getHeaders()
-          })
-        )
+    try {
+      const resUsuarios = await fetch(
+        `http://127.0.0.1:8000/api/auth/usuarios/?negocio_id=${id}`,
+        { headers: getHeaders() }
       );
-    }
+      const usuarios = await resUsuarios.json();
 
-    // 3. Solo después eliminar el negocio
-    const resNegocio = await fetch(`http://127.0.0.1:8000/api/negocios/${id}/`, {
-      method: "DELETE",
-      headers: getHeaders()
-    });
+      if (Array.isArray(usuarios) && usuarios.length > 0) {
+        await Promise.all(
+          usuarios.map((u) =>
+            fetch(`http://127.0.0.1:8000/api/auth/usuarios/${u.id}/`, {
+              method: "DELETE",
+              headers: getHeaders()
+            })
+          )
+        );
+      }
 
-    if (resNegocio.ok) {
-      cargarEmpresas();
-    } else {
-      alert("Error al eliminar la empresa. Intenta de nuevo.");
+      const resNegocio = await fetch(`http://127.0.0.1:8000/api/negocios/${id}/`, {
+        method: "DELETE",
+        headers: getHeaders()
+      });
+
+      if (resNegocio.ok) {
+        cargarEmpresas();
+      } else {
+        alert("Error al eliminar la empresa. Intenta de nuevo.");
+      }
+    } catch {
+      alert("Error de conexión al eliminar.");
     }
-  } catch {
-    alert("Error de conexión al eliminar.");
-  }
-};
+  };
 
 const handleAprobarSolicitud = async (solicitud) => {
   const raw = solicitud._raw;
   const passwordTemporal = raw.nombre_negocio.slice(0, 4) + "2024";
 
-  // 1. Marcar solicitud como aprobada
+  // 1. Verificar si el correo ya existe
+  const resVerificar = await fetch("http://127.0.0.1:8000/api/auth/verificar-correo/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ correo: raw.correo })
+  });
+
+  const dataVerificar = await resVerificar.json();
+
+  if (dataVerificar.existe) {
+    alert(`⚠️ No se puede aprobar esta solicitud:\nEl correo ${raw.correo} ya está registrado.`);
+    return;
+  }
+
+  // 2. Marcar solicitud como aprobada
   await fetch(`http://127.0.0.1:8000/api/negocios/solicitudes/${solicitud.id}/`, {
     method: "PATCH",
     headers: getHeaders(),
     body: JSON.stringify({ estado: "aprobado" })
   });
 
-  // 2. Crear el negocio
+  // 3. Crear el negocio
   const resNegocio = await fetch("http://127.0.0.1:8000/api/negocios/", {
     method: "POST",
     headers: getHeaders(),
@@ -231,16 +244,16 @@ const handleAprobarSolicitud = async (solicitud) => {
   });
   const negocioCreado = await resNegocio.json();
 
-  // 3. Crear usuario admin para ese negocio
+  // 4. Crear usuario admin
   if (negocioCreado.id) {
     await fetch("http://127.0.0.1:8000/api/auth/registro/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombre:    raw.nombre_dueño,
-        correo:    raw.correo,
-        password:  passwordTemporal,
-        rol:       "admin",
+        nombre:     raw.nombre_dueño,
+        correo:     raw.correo,
+        password:   passwordTemporal,
+        rol:        "admin",
         negocio_id: negocioCreado.id
       })
     });
@@ -257,7 +270,10 @@ const handleAprobarSolicitud = async (solicitud) => {
   cargarEmpresas();
   cargarSolicitudes();
 };
-
+const handleCerrarSesion = () => {
+    localStorage.clear();
+    navigate("/Inicio");
+  };
   const handleRechazarSolicitud = async (id) => {
     if (!window.confirm("¿Rechazar esta solicitud?")) return;
     await fetch(`http://127.0.0.1:8000/api/negocios/solicitudes/${id}/`, {
@@ -300,6 +316,7 @@ const handleAprobarSolicitud = async (solicitud) => {
         onCerrarModal={handleCerrarModal}
         onFormEmpresaChange={handleFormEmpresaChange}
         onGuardarEmpresa={handleGuardarEmpresa}
+        onCerrarSesion={handleCerrarSesion}
       />
       <Footer />
     </div>

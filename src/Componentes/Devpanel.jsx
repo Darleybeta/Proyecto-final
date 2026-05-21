@@ -46,6 +46,7 @@ export default function DevPanel({
   onCerrarModal,
   onFormEmpresaChange,
   onGuardarEmpresa,
+  onCerrarSesion,
 }) {
   return (
     <main className="dev">
@@ -59,6 +60,7 @@ export default function DevPanel({
             <p className="dev__subtitulo">Gestión global de empresas y cuentas del sistema.</p>
           </div>
         </div>
+        <div className="dev_header-actions">
         {vistaActiva === "empresas" && (
           <button className="dev__btn-primary" onClick={onAbrirModalEmpresa}>
             ＋ Nueva Empresa
@@ -69,6 +71,10 @@ export default function DevPanel({
             ← Volver a Empresas
           </button>
         )}
+        <button className="dev__btn-logout" onClick={onCerrarSesion} title="Cerrar sesión">
+            ⏻ Cerrar Sesión
+          </button>
+          </div>
       </header>
 
       {/* ── STATS ── */}
