@@ -5,7 +5,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../style/Finicio.css";
 
-export default function Finicio({ handleSubmit, form, handleChange, mostrarSelectRol = false }) {
+export default function Finicio({ handleSubmit, form, handleChange, mostrarSelectRol = false,error,cargando }) {
   return (
     <div className="registro-container">
       <h1 className="registro-titulo">Inicio de Sesión</h1>
@@ -61,6 +61,8 @@ export default function Finicio({ handleSubmit, form, handleChange, mostrarSelec
 
         <button type="submit" className="registro-btn">Iniciar Sesión</button>
       </form>
+      {error && <p style={{ color: "red", textAling:"center", marginTop:"8px"}}>{error}</p>}
+      {cargando && <p style={{ textAling:"center", marginTop:"8px"}}>Cargando...</p>}
 
       <p className="registro-footer">
         ¿Aún no tienes una cuenta?{" "}

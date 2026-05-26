@@ -47,13 +47,13 @@ export default function InicioSesionPage({ onLogin }) {
   return (
     <div className="page-container">
       <div className="content-wrapper">
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-        {cargando && <p style={{ textAlign: "center" }}>Cargando...</p>}
         <Finicio
           handleSubmit={handleSubmit}
           form={form}
           handleChange={handleChange}
           mostrarSelectRol={false}
+          error={error}
+          cargando={cargando}
         />
       </div>
     </div>
