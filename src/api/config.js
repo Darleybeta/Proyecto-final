@@ -213,3 +213,31 @@ export const eliminarFactura = async (id) => {
     });
     return res.ok;
 };
+// DOCUMENTOS
+export const getDocumentos = async () => {
+    const res = await fetch(`${API_URL}/documentos/documentos/`, {
+        headers: headers()
+    });
+    return res.json();
+};
+
+export const subirDocumento = async (formData) => {
+    const res = await fetch(`${API_URL}/documentos/documentos/`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        },
+        body: formData
+    });
+
+    return res.json();
+};
+
+export const eliminarDocumento = async (id) => {
+    const res = await fetch(`${API_URL}/documentos/documentos/${id}/`, {
+        method: 'DELETE',
+        headers: headers()
+    });
+
+    return res.ok;
+};

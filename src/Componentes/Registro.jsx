@@ -3,7 +3,14 @@ import React from "react";
 import "../style/Registro.css";
 import { Link } from "react-router-dom";
 
-export default function Registro({ handleSubmit, form, handleChange }) {
+export default function Registro({
+  handleSubmit,
+  form,
+  handleChange,
+  error,
+  exito,
+  cargando,
+}) {
   return (
    <div className="reg-page"> 
     <div className="reg-container">
@@ -77,6 +84,23 @@ export default function Registro({ handleSubmit, form, handleChange }) {
         </div>
 
         <button type="submit" className="reg-btn">Enviar solicitud</button>
+        {cargando && (
+  <p className="reg-mensaje reg-cargando">
+    Enviando solicitud...
+  </p>
+)}
+
+{error && (
+  <p className="reg-mensaje reg-error">
+    {error}
+  </p>
+)}
+
+{exito && (
+  <p className="reg-mensaje reg-exito">
+    {exito}
+  </p>
+)}
       </form>
 
       <p className="reg-footer">

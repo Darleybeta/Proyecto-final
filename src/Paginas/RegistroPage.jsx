@@ -59,14 +59,15 @@ const handleSubmit = async (e) => {
   return (
     <div className="page-container">
       <div className="content-wrapper">
-        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-        {exito && <p style={{ color: "green", textAlign: "center" }}>{exito}</p>}
-        {cargando && <p style={{ textAlign: "center" }}>Enviando solicitud...</p>}
-        <Registro
+          <Registro
           handleSubmit={handleSubmit}
           form={form}
           handleChange={handleChange}
-        />
+          error={error}
+          exito={exito}
+          cargando={cargando}
+/>
+      
       </div>
     </div>
   );

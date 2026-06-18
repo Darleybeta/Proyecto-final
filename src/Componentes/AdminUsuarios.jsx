@@ -8,10 +8,7 @@ const ROL_BADGE = { Administrador: "admin", Vendedor: "vendedor" };
 const TABS = [
   { id: "usuarios",    icon: "👥", label: "Usuarios"    },
   { id: "nomina",      icon: "💵", label: "Nómina"      },
-  { id: "gastos",      icon: "💸", label: "Gastos"      },
-  { id: "proveedores", icon: "🏭", label: "Proveedores" },
-  { id: "servicios",   icon: "🔧", label: "Servicios"   },
-  { id: "arriendo",    icon: "🏢", label: "Arriendo"    },
+
 ];
 
 export default function AdminUsuarios({

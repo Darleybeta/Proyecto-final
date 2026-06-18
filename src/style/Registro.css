@@ -228,4 +228,22 @@
   .reg-form {
     grid-template-columns: 1fr;
   }
+  .reg-mensaje {
+  grid-column: 1 / -1;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.reg-exito {
+  color: #0f766e;
+}
+
+.reg-error {
+  color: #dc2626;
+}
+
+.reg-cargando {
+  color: #1a3a52;
+}
 }
