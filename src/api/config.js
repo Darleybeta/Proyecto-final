@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:8000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
 const getToken = () => localStorage.getItem('token');
 
@@ -6,14 +6,16 @@ const headers = () => ({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${getToken()}`
 });
+
 export const crearSolicitud = async (datos) => {
-    const res = await fetch('http://127.0.0.1:8000/api/negocios/solicitudes/', {
+    const res = await fetch(`${API_URL}/negocios/solicitudes/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }, // ← sin Authorization
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos)
     });
     return res.json();
 };
+
 // AUTH
 export const login = async (correo, password) => {
     const res = await fetch(`${API_URL}/auth/login/`, {
@@ -123,6 +125,7 @@ export const preguntarIA = async (negocio_id, pregunta) => {
     });
     return res.json();
 };
+
 export const actualizarProducto = async (id, datos) => {
     const res = await fetch(`${API_URL}/inventario/productos/${id}/`, {
         method: 'PATCH',
@@ -139,6 +142,7 @@ export const eliminarProducto = async (id) => {
     });
     return res.ok;
 };
+
 // NÓMINA
 export const getNomina = async (negocio_id) => {
     const res = await fetch(`${API_URL}/nomina/?negocio_id=${negocio_id}`, {
@@ -180,6 +184,7 @@ export const pagarNomina = async (id) => {
     });
     return res.json();
 };
+
 // FACTURAS
 export const getFacturas = async (negocio_id) => {
     const res = await fetch(`${API_URL}/contabilidad/facturas/?negocio_id=${negocio_id}`, {
@@ -213,6 +218,7 @@ export const eliminarFactura = async (id) => {
     });
     return res.ok;
 };
+
 // DOCUMENTOS
 export const getDocumentos = async () => {
     const res = await fetch(`${API_URL}/documentos/documentos/`, {
@@ -229,7 +235,6 @@ export const subirDocumento = async (formData) => {
         },
         body: formData
     });
-
     return res.json();
 };
 
@@ -238,6 +243,5 @@ export const eliminarDocumento = async (id) => {
         method: 'DELETE',
         headers: headers()
     });
-
     return res.ok;
 };
