@@ -12,7 +12,7 @@ import DevPanelPage from '../Paginas/DevpanelPage';
 import ContabilidadPage from '../Paginas/ContabilidadPage';
 import ReportesPage from '../Paginas/ReportesPage';
 import FacturasPage from '../Paginas/FacturasPage';
-import ChatIAPage from '../Paginas/ChatIAPage';
+import ChatIAPage from '../Paginas/ChatiaPage'
 import Layout from '../Componentes/Layout';
 import CambiarContrasenaPage from '../Paginas/CambiarContrasenaPage';  
 
