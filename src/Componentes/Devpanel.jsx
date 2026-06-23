@@ -1,8 +1,7 @@
 // Componentes/DevPanel.jsx
 // Solo JSX. Sin lógica ni estados.
 
-import "../style/DevPanel.css";
-
+import "../style/Devpanel.css";
 const ESTADO_CLASS = { Activa: "activa", Inactiva: "inactiva", Pendiente: "pendiente" };
 
 export default function DevPanel({
