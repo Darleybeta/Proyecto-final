@@ -1,4 +1,4 @@
-import "../style/ChatIA.css";
+import "../style/Chatia.css";
 
 export default function ChatIA({
   // Mensajes
