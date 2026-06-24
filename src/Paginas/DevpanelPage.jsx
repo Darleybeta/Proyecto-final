@@ -38,13 +38,13 @@ export default function DevPanelPage() {
   }, []);
 
   const cargarEmpresas = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/negocios/", { headers: getHeaders() });
+    const res = await fetch("https://lukita-2si9.onrender.com/api/negocios/", { headers: getHeaders() });
     const data = await res.json();
     setEmpresas(Array.isArray(data) ? data : []);
   };
 
   const cargarSolicitudes = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/negocios/solicitudes/", { headers: getHeaders() });
+    const res = await fetch("https://lukita-2si9.onrender.com/api/negocios/solicitudes/", { headers: getHeaders() });
     const data = await res.json();
     if (Array.isArray(data)) {
       const transformadas = data
@@ -99,7 +99,7 @@ export default function DevPanelPage() {
 
   const handleVerUsuarios = async (empresa) => {
     setEmpresaSeleccionada(empresa);
-    const res = await fetch(`http://127.0.0.1:8000/api/auth/usuarios/?negocio_id=${empresa.id}`, { headers: getHeaders() });
+    const res = await fetch(`https://lukita-2si9.onrender.com/api/auth/usuarios/?negocio_id=${empresa.id}`, { headers: getHeaders() });
     const data = await res.json();
     setUsuariosEmpresa(Array.isArray(data) ? data : []);
     setPasswordsVisibles({});
@@ -150,13 +150,13 @@ export default function DevPanelPage() {
     if (!correo.trim()) return setErrorForm("El correo es obligatorio.");
 
     if (empresaEditando) {
-      await fetch(`http://127.0.0.1:8000/api/negocios/${empresaEditando.id}/`, {
+      await fetch(`https://lukita-2si9.onrender.com/api/negocios/${empresaEditando.id}/`, {
         method: "PATCH",
         headers: getHeaders(),
         body: JSON.stringify(formEmpresa)
       });
     } else {
-      await fetch("http://127.0.0.1:8000/api/negocios/", {
+      await fetch("https://lukita-2si9.onrender.com/api/negocios/", {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify(formEmpresa)
@@ -171,7 +171,7 @@ export default function DevPanelPage() {
 
     try {
       const resUsuarios = await fetch(
-        `http://127.0.0.1:8000/api/auth/usuarios/?negocio_id=${id}`,
+        `https://lukita-2si9.onrender.com/api/auth/usuarios/?negocio_id=${id}`,
         { headers: getHeaders() }
       );
       const usuarios = await resUsuarios.json();
@@ -179,7 +179,7 @@ export default function DevPanelPage() {
       if (Array.isArray(usuarios) && usuarios.length > 0) {
         await Promise.all(
           usuarios.map((u) =>
-            fetch(`http://127.0.0.1:8000/api/auth/usuarios/${u.id}/`, {
+            fetch(`https://lukita-2si9.onrender.com/api/auth/usuarios/${u.id}/`, {
               method: "DELETE",
               headers: getHeaders()
             })
@@ -187,7 +187,7 @@ export default function DevPanelPage() {
         );
       }
 
-      const resNegocio = await fetch(`http://127.0.0.1:8000/api/negocios/${id}/`, {
+      const resNegocio = await fetch(`https://lukita-2si9.onrender.com/api/negocios/${id}/`, {
         method: "DELETE",
         headers: getHeaders()
       });
@@ -207,7 +207,7 @@ const handleAprobarSolicitud = async (solicitud) => {
   const passwordTemporal = raw.nombre_negocio.slice(0, 4) + "2024";
 
   // 1. Verificar si el correo ya existe
-  const resVerificar = await fetch("http://127.0.0.1:8000/api/auth/verificar-correo/", {
+  const resVerificar = await fetch("https://lukita-2si9.onrender.com/api/auth/verificar-correo/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ correo: raw.correo })
@@ -221,14 +221,14 @@ const handleAprobarSolicitud = async (solicitud) => {
   }
 
   // 2. Marcar solicitud como aprobada
-  await fetch(`http://127.0.0.1:8000/api/negocios/solicitudes/${solicitud.id}/`, {
+  await fetch(`https://lukita-2si9.onrender.com/api/negocios/solicitudes/${solicitud.id}/`, {
     method: "PATCH",
     headers: getHeaders(),
     body: JSON.stringify({ estado: "aprobado" })
   });
 
   // 3. Crear el negocio
-  const resNegocio = await fetch("http://127.0.0.1:8000/api/negocios/", {
+  const resNegocio = await fetch("https://lukita-2si9.onrender.com/api/negocios/", {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({
@@ -246,7 +246,7 @@ const handleAprobarSolicitud = async (solicitud) => {
 
   // 4. Crear usuario admin
   if (negocioCreado.id) {
-    await fetch("http://127.0.0.1:8000/api/auth/registro/", {
+    await fetch("https://lukita-2si9.onrender.com/api/auth/registro/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -276,7 +276,7 @@ const handleCerrarSesion = () => {
   };
   const handleRechazarSolicitud = async (id) => {
     if (!window.confirm("¿Rechazar esta solicitud?")) return;
-    await fetch(`http://127.0.0.1:8000/api/negocios/solicitudes/${id}/`, {
+    await fetch(`https://lukita-2si9.onrender.com/api/negocios/solicitudes/${id}/`, {
       method: "PATCH",
       headers: getHeaders(),
       body: JSON.stringify({ estado: "rechazado" })

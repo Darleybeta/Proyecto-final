@@ -162,7 +162,7 @@ export default function FacturasPage({ usuarioActual }) {
   const handleMarcarPagada = async (id) => {
   if (!window.confirm("¿Marcar esta factura como pagada? Se registrará como ingreso en contabilidad.")) return;
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/contabilidad/facturas/${id}/pagar/`, {
+    const res = await fetch(`https://lukita-2si9.onrender.com/api/contabilidad/facturas/${id}/pagar/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

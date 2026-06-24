@@ -33,7 +33,7 @@ export default function NuevaContrasenaPage() {
     setCargando(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/auth/confirmar-recuperacion/", {
+      const res = await fetch("https://lukita-2si9.onrender.com/api/auth/confirmar-recuperacion/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

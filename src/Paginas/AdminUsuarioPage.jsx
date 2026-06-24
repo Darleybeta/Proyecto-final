@@ -13,7 +13,7 @@ const FORM_PROV     = { nombre: "", nit: "", telefono: "", correo: "", ciudad: "
 const FORM_SERV     = { nombre: "", tipo: "", monto: "", fecha: "" };
 const FORM_ARRIENDO = { descripcion: "", arrendador: "", valorMensual: "", fechaPago: "", activo: "true" };
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://lukita-2si9.onrender.com/api";
 const getHeaders = () => ({
   "Content-Type": "application/json",
   "Authorization": `Bearer ${localStorage.getItem("token")}`

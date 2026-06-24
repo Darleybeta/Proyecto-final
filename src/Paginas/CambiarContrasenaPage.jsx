@@ -32,7 +32,7 @@ export default function CambiarContrasenaPage() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://127.0.0.1:8000/api/auth/cambiar-contrasena/", {
+      const res = await fetch("https://lukita-2si9.onrender.com/api/auth/cambiar-contrasena/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

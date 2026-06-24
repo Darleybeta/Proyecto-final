@@ -5,7 +5,7 @@ import Contabilidad from "../Componentes/Contabilidad.jsx";
 import Footer from "../Componentes/Footer.jsx";
 import { getTransacciones, crearTransaccion } from "../api/config.js";
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://lukita-2si9.onrender.com/api";
 const getHeaders = () => ({
   "Content-Type": "application/json",
   "Authorization": `Bearer ${localStorage.getItem("token")}`

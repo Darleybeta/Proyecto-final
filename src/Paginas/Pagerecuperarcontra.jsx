@@ -20,7 +20,7 @@ export default function PageRecuperar() {
     setError("");
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/auth/recuperar-contrasena/`, {
+      const res = await fetch(`https://lukita-2si9.onrender.com/api/auth/recuperar-contrasena/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: form.correo })
